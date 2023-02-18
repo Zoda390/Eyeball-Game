@@ -12,16 +12,15 @@ class Item {
 }
 
 class Eyeball extends Item {
-    constructor(pngNum, visibleColors, colorReplace) {
+    constructor(pngNum) {
         super(pngNum, true);
-        this.visibleColors = visibleColors; //array of colors this eye can see
-        this.colorReplace = colorReplace; //array of color replacments this eye makes (ex. [["red", "blue"], ["blue", "red"]])
     }
 }
 
 class Weapon extends Item {
-    constructor(damage, pngNum, pickup) {
+    constructor(owner, damage, pngNum, pickup) {
         super(pngNum, pickup);
+        this.owner = owner;
         this.damage = damage; //amount of hp this weapon does
     }
 
@@ -29,12 +28,18 @@ class Weapon extends Item {
 }
 
 class RangedWeapon extends Weapon {
-    constructor(damage, cooldown, pngNum, pickup) {
-        super(damage, pngNum, pickup); //sus
+    constructor(owner, damage, cooldown, pngNum, pickup) {
+        super(owner, damage, pngNum, pickup); //sus
         this.cooldown = cooldown;
+        this.lastShot = 0;
     }
 
     use(x, y, direction) {
-        attacks.push(new Projectile(x, y, direction));
+        let time = Date.now();
+        if(time - this.lastShot > this.cooldown)
+        {
+            attacks.push(new Projectile(x, y, direction, this));
+            this.lastShot = time;
+        }
     }
 }

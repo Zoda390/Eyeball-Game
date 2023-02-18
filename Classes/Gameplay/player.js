@@ -4,10 +4,14 @@ function toNum(b)
 }
 
 class Player extends LivingEntity {
-    constructor(x, y, weapon, color) {
-        super(x, y, weapon, 100, ["black", "white"], color);
-        this.eyes.push(new Eyeball(1, ["red", "blue", "green"], []));
-        this.inv.push(new Weapon(10, 2, true));
+    constructor(x, y, color, attackOrigin) {
+        super(x, y, 100, ["black", "white"], color, attackOrigin);
+        this.pngNum = 0;
+        this.bounds.dimens = createVector(entityImgs[this.pngNum].width, entityImgs[this.pngNum].height);
+        this.bounds.feet = [createVector(-this.bounds.dimens.x/4, this.bounds.dimens.y/2), createVector(this.bounds.dimens.x/4, this.bounds.dimens.y/2)];
+        this.eyes.push(new Eyeball(0));
+        this.eyes.push(new Eyeball(1));
+        this.weapon = new RangedWeapon(this, 10, 100, 0, false);
     }
 
     takeInput()

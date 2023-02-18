@@ -1,10 +1,22 @@
-class Projectile extends Entity
+class Attack extends Entity
 {
-    constructor(x, y, direction)
+    constructor(x, y, direction, source)
     {
-        super(x, y, "#FFFFFF")
-        this.direction = direction;
+        super(x, y, "#FFFFFF");
         this.despawn = false;
+        this.direction = direction;
+        this.source = source;
+        
+        this.bounds.dimens.x /= 2;
+        this.bounds.dimens.y /= 2;
+    }
+}
+
+class Projectile extends Attack
+{
+    constructor(x, y, direction, source)
+    {
+        super(x, y, direction, source);
     }
 
     update()
@@ -26,6 +38,7 @@ class Projectile extends Entity
 
     render()
     {
+        super.render();
         layer2.push();
         layer2.circle(this.pos.x, this.pos.y, 15);
         layer2.pop();

@@ -1,16 +1,28 @@
 class LifetimeManager
 {
-    constructor(projectiles)
+    constructor(enemies, attacks)
     {
-        this.projectiles = projectiles;
+        this.enemies = enemies
+        this.attacks = attacks;
     }
 
     cleanse()
     {
-        for(let i = 0; i < this.projectiles.length; i++) {
-            if(this.projectiles[i].despawn)
+        for(let i = 0; i < this.enemies.length; i++)
+        {
+            if(this.enemies[i].despawn)
             {
-                this.projectiles.splice(i, 1);
+                this.enemies.splice(i, 1);
+                i--;
+            }
+        }
+
+        console.log(this.attacks.length);
+        for(let i = 0; i < this.attacks.length; i++) 
+        {
+            if(this.attacks[i].despawn)
+            {
+                this.attacks.splice(i, 1);
                 i--;
             }
         }

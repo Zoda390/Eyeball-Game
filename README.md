@@ -31,6 +31,12 @@ Game stuff:
 
     TO-DO:
         1. Collisions
+            1.attacks to entity [done]
+            2.attacks to player [done]
+            3.player to doors
+            4.player to walls
+            5.player to pitfalls
+            6.player to secret door
         2. Rooms
             1.Walls
             2.Doors

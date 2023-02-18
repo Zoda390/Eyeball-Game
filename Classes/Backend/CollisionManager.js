@@ -52,6 +52,9 @@ class CollisionManager
                             case 4: x = 8; break;
                         }
                         this.enemies[j].move(x, y);
+
+                        if(this.enemies[j].hp <=0)
+                            this.enemies[j].despawn = true;
                     }
                 }
             }
@@ -60,6 +63,28 @@ class CollisionManager
         //check pitfalls against enemies/player
 
         //check all entities against walls
+        //wall.restrict(player[0])
 
+        if(wallBox.contains(player[0].bounds.points[0].x, player[0].bounds.points[0].y))
+        {
+            console.log("Collission!!");
+
+            let xdiff = player[0].bounds.points[0].x - wallBox.center.x;
+            let ydiff = player[0].bounds.points[0].y - wallBox.center.y;
+            console.log(xdiff, ydiff);
+        }
+
+        //for(let i = 0; i < this.enemies.length; i++)
+            //wall.restrict(this.enemies[i]);
+
+        for(let i = 0; i < this.attacks.length; i++)
+        {
+            let checking = this.attacks[i].bounds.points[0];
+            if(this.attacks[i].direction == 1)
+                checking = this.attacks[i].bounds.points[1];
+
+            //if(wall.outOfBounds(checking))
+                //this.attacks[i].despawn = true;
+        }
     }
 }

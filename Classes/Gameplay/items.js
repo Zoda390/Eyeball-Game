@@ -1,3 +1,5 @@
+var allEyes = [];
+
 class Item {
     constructor(pngNum, pickup) {
         this.pngNum = pngNum; //index of image found in itemImgs[]
@@ -18,27 +20,28 @@ class Eyeball extends Item {
 }
 
 class Weapon extends Item {
-    constructor(owner, damage, pngNum, pickup) {
+    constructor(owner, x, y, damage, pngNum, pickup) {
         super(pngNum, pickup);
         this.owner = owner;
         this.damage = damage; //amount of hp this weapon does
+        this.origin = createVector(x, y);
     }
 
     use(x, y, direction) {};
 }
 
 class RangedWeapon extends Weapon {
-    constructor(owner, damage, cooldown, pngNum, pickup) {
-        super(owner, damage, pngNum, pickup); //sus
+    constructor(owner, x, y, damage, cooldown, pngNum, pickup) {
+        super(owner, x, y, damage, pngNum, pickup); //sus
         this.cooldown = cooldown;
         this.lastShot = 0;
     }
 
     use(x, y, direction) {
         let time = Date.now();
-        if(time - this.lastShot > this.cooldown)
+        if(direction != 0 && time - this.lastShot > this.cooldown)
         {
-            attacks.push(new Projectile(x, y, direction, this));
+            rooms[CurrentRoomId].attacks.push(new Projectile(x, y, direction, this));
             this.lastShot = time;
         }
     }

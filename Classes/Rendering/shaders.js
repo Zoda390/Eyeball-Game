@@ -83,6 +83,7 @@ uniform sampler2D tex1;
 uniform sampler2D pal1;
 uniform sampler2D pal2;
 uniform sampler2D pal3;
+uniform sampler2D pal4;
 
 void main() {
   vec2 uv = vTexCoord;
@@ -96,11 +97,21 @@ void main() {
   for(int x = 0; x < 48; x++){
     vec4 c = texture2D(pal1, vec2((float(x)/48.0)+((1.0/48.0)/2.0), 0.0));
     if(distance(tex, c) <= 0.1){
-        outputColor = texture2D(pal2, vec2((float(x)/48.0)+((1.0/48.0)/2.0),0.0));
-        if(outputColor.a < 1.0){
-            outputColor = (outputColor*outputColor.a) + (texture2D(tex0, uv)*texture2D(tex0, uv).a);
-        }
-        break;
+      vec4 eye1 = texture2D(pal2, vec2((float(x)/48.0)+((1.0/48.0)/2.0),0.0));
+      vec4 eye2 = texture2D(pal3, vec2((float(x)/48.0)+((1.0/48.0)/2.0),0.0));
+      if(eye1.a + eye2.a > 1.0){
+        outputColor = ((eye1*eye1.a)+(eye2*eye2.a))/2.0;
+      }
+      else{
+        outputColor = ((eye1*eye1.a)+(eye2*eye2.a));
+      }
+      if(outputColor.a <= 0.1){
+        outputColor = texture2D(pal4, vec2((float(x)/48.0)+((1.0/48.0)/2.0),0.0));
+      }
+      if(outputColor.a < 1.0){
+        outputColor = (outputColor*outputColor.a) + (texture2D(tex0, uv)*texture2D(tex0, uv).a);
+      }
+      break;
     }
   }
 
@@ -118,14 +129,13 @@ var layer0; //room layer
 var layer1; //room + shader layer
 var layer2; //entities layer
 var layer3; //entities + shader layer
-var layer4; //ui layer
-var layer5; //item layer
-var layer6; //item + shader layer
-//layer7 = createCanvas(); all layers combined
+var layer4; //ui + item layer
+var layer5; //ui + item + shader layer
+//layer6 = createCanvas(); all layers combined
 
 var colorShader1;
 var colorShader3;
-var colorShader6;
+var colorShader5;
 
 var gamePalette;
 var palette2;
@@ -138,23 +148,22 @@ function setupGraphics(){
     layer2 = createGraphics(width, height);
     layer3 = createGraphics(width, height, WEBGL);
     layer4 = createGraphics(width, height);
-    layer5 = createGraphics(width, height);
-    layer6 = createGraphics(width, height, WEBGL);
+    layer5 = createGraphics(width, height, WEBGL);
 
     layer0.noStroke();
     layer1.noStroke();
     layer2.noStroke();
     layer3.noStroke();
     layer4.noStroke();
+    layer4.noStroke();
     layer5.noStroke();
-    layer6.noStroke();
 
     colorShader1 = layer1.createShader(vert1, frag1);
     layer1.shader(colorShader1);
     colorShader3 = layer3.createShader(vert1, frag1);
     layer3.shader(colorShader3);
-    colorShader6 = layer6.createShader(vert1, frag2);
-    layer6.shader(colorShader6);
+    colorShader5 = layer5.createShader(vert1, frag2);
+    layer5.shader(colorShader5);
 }
 
 function layer7Draw(){
@@ -176,15 +185,23 @@ function layer7Draw(){
     colorShader3.setUniform("pal3", itemImgs[player[0].eyes[1].pngNum]);
     layer2.clear();
 
-    layer6.rect(-width/2, -height/2, width, height);
-    colorShader6.setUniform("tex0", layer3);
-    colorShader6.setUniform("tex1", layer5);
-    colorShader6.setUniform("pal1", gamePalette);
-    colorShader6.setUniform("pal2", itemImgs[player[0].eyes[0].pngNum]);
-    colorShader6.setUniform("pal3", itemImgs[player[0].eyes[1].pngNum]);
+    layer5.rect(-width/2, -height/2, width, height);
+    //draw UI
+    layer4.clear();
+    layer4.fill(100);
+    
+    //draw Items
+    layer4.image(layer4, 0, 0);
 
+    colorShader5.setUniform("tex0", layer3);
+    colorShader5.setUniform("tex1", layer4);
+    colorShader5.setUniform("pal1", gamePalette);
+    colorShader5.setUniform("pal2", itemImgs[player[0].eyes[0].pngNum]);
+    colorShader5.setUniform("pal3", itemImgs[player[0].eyes[1].pngNum]);
+    colorShader5.setUniform("pal4", greyGamePalette);
+    
     //background(0);
-    image(layer6, 0, 0);
+    image(layer5, 0, 0);
     image(layerdb, 0, 0);
     layerdb.clear();
 }

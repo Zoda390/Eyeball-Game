@@ -8,6 +8,7 @@ class Entity {
         this.pos = createVector(x, y);
         this.fillColor = color;
         this.bounds = new EntityCollider(x, y, 50, 50);
+        this.despawn = false;
     }
 
     update(){};
@@ -30,7 +31,7 @@ class Entity {
 }
 
 class LivingEntity extends Entity {
-    constructor(x, y, hp, colors, fillColor, attackOrigin) {
+    constructor(x, y, hp, fillColor) {
         super(x, y, fillColor);
         this.hp = hp;
         this.mhp = hp; //max hp
@@ -38,8 +39,7 @@ class LivingEntity extends Entity {
         this.eyes = [];
         this.pngNum; //index of image found in LivingEntityImgs[]
         this.weapon;
-        this.attackOrigin = attackOrigin;
-        this.attackDir = 0; //temporary probably
+        this.facing = 0;
     }
 
     render() {
@@ -64,17 +64,13 @@ class LivingEntity extends Entity {
 
     attack(direction)
     {
-        this.attackDir = direction;
-        if(this.attackDir != 0)
-        {            
-            this.weapon.use(this.bounds.center.x + (this.attackOrigin.x * this.bounds.dimens.x), this.bounds.center.y + (this.attackOrigin.y * this.bounds.dimens.y), this.attackDir);
-        }
+        this.weapon.use(this.bounds.center.x + (this.weapon.origin.x * this.bounds.dimens.x), this.bounds.center.y + (this.weapon.origin.y * this.bounds.dimens.y), direction);
     }
 }
 
 class Monster extends LivingEntity {
-    constructor(x, y, hp, colors, damage, eyes, color, attackOrigin) {
-        super(x, y, hp, colors, color, attackOrigin);
+    constructor(x, y, hp, damage, eyes, color) {
+        super(x, y, hp, color);
         this.weapon = new Weapon(this, damage, 0, false);
         this.inv.push();
         this.eyes = eyes;

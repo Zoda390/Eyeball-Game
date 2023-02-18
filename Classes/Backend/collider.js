@@ -6,11 +6,14 @@ class EntityCollider
     {
         this.center = createVector(centerX, centerY);
         this.dimens = createVector(height, width);
+        this.points = [];
     }
 
     shiftPos(point)
     {
         this.center.add(point);
+        for(let special of this.points)
+            special.add(point);
     }
 
     render()
@@ -22,10 +25,14 @@ class EntityCollider
         layerdb.rect(this.center.x, this.center.y, this.dimens.x, this.dimens.y);
         layerdb.fill(0, 255, 0, 100);
         layerdb.stroke(0, 255, 0, 255);
-        let temp = this.bottomCorners();
+        for(let point of this.points)
+        {
+            layerdb.circle(point.x, point.y, 10);
+        }
+        //let temp = this.bottomCorners();
 
-        layerdb.circle(temp.x, temp.y, 10);
-        layerdb.circle(temp.z, temp.y, 10);
+        //layerdb.circle(temp.x, temp.y, 10);
+        //layerdb.circle(temp.z, temp.y, 10);
 
         layerdb.pop();
     }

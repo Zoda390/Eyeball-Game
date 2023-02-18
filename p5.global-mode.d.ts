@@ -2091,7 +2091,7 @@ declare function redraw(n?: number): void;
 declare function applyMatrix(a: number, b: number, c: number, d: number, e: number, f: number): p5;
 
 /**
- *   Replaces the current matrix with the identity 
+ *   Replaces the current matrix with the idLivingEntity 
  *   matrix.
  *
  *   @chainable
@@ -4287,7 +4287,7 @@ declare function sqrt(n: number): number;
  *   Creates a new p5.Vector (the datatype for storing 
  *   vectors). This provides a two or three dimensional 
  *   vector, specifically a Euclidean (also known as 
- *   geometric) vector. A vector is an entity that has 
+ *   geometric) vector. A vector is an LivingEntity that has 
  *   both magnitude and direction.
  *
  *   @param [x] x component of the vector

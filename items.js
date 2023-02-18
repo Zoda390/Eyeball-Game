@@ -24,4 +24,17 @@ class Weapon extends Item {
         super(pngNum, pickup);
         this.damage = damage; //amount of hp this weapon does
     }
+
+    use(x, y, direction) {};
+}
+
+class RangedWeapon extends Weapon {
+    constructor(damage, cooldown, pngNum, pickup) {
+        super(damage, pngNum, pickup); //sus
+        this.cooldown = cooldown;
+    }
+
+    use(x, y, direction) {
+        attacks.push(new Projectile(x, y, direction));
+    }
 }

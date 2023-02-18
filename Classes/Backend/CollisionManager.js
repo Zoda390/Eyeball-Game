@@ -10,6 +10,19 @@ class CollisionManager
     simulate()
     {
         //check doors
+        for(let door of rooms[CurrentRoomId].doors)
+        {
+            if(door !== 0){
+                let leftFoot = door.bounds.contains(player[0].bounds.points[0].x, player[0].bounds.points[0].y);
+                let rightFoot = door.bounds.contains(player[0].bounds.points[1].x, player[0].bounds.points[1].y);
+
+                if(leftFoot || rightFoot)
+                {
+                    door.screenTransition();
+                    return;
+                }
+            }
+        }
 
         //check all attacks against all enemies/player
         for(let i = 0; i < this.attacks.length; i++)
@@ -28,6 +41,7 @@ class CollisionManager
                         case 2: y = 8; break;
                         case 3: x = -8; break;
                         case 4: x = 8; break;
+                        this.player[0].move(x, y);
                     }
                 }
             }
@@ -63,16 +77,33 @@ class CollisionManager
         //check pitfalls against enemies/player
 
         //check all entities against walls
-        //wall.restrict(player[0])
-
-        if(wallBox.contains(player[0].bounds.points[0].x, player[0].bounds.points[0].y))
+        //player check
+        for(let wall of rooms[CurrentRoomId].walls)
         {
-            console.log("Collission!!");
+            let leftFoot = wall.contains(player[0].bounds.points[0].x, player[0].bounds.points[0].y);
+            let rightFoot = wall.contains(player[0].bounds.points[1].x, player[0].bounds.points[1].y);
 
-            let xdiff = player[0].bounds.points[0].x - wallBox.center.x;
-            let ydiff = player[0].bounds.points[0].y - wallBox.center.y;
-            console.log(xdiff, ydiff);
+            if(leftFoot)
+                this.playerCheck(wall, 0);
+            if(rightFoot)
+                this.playerCheck(wall, 1);
         }
+
+        //attacks check
+        for(let attack of rooms[CurrentRoomId].attacks)
+        {
+            let id = 1;
+            for(let wall of rooms[CurrentRoomId].walls)
+            {
+                let touching = wall.contains(attack.bounds.points[id].x, attack.bounds.points[id].y); //EntityCollider.centerIntersect(attack.bounds, wall) //EntityCollider.anyIntersect(wall, attack.bounds)
+                if(touching)
+                {
+                    attack.despawn = true;
+                    break;
+                }
+            }
+        }
+        
 
         //for(let i = 0; i < this.enemies.length; i++)
             //wall.restrict(this.enemies[i]);
@@ -82,9 +113,25 @@ class CollisionManager
             let checking = this.attacks[i].bounds.points[0];
             if(this.attacks[i].direction == 1)
                 checking = this.attacks[i].bounds.points[1];
+        }
+    }
 
-            //if(wall.outOfBounds(checking))
-                //this.attacks[i].despawn = true;
+    playerCheck(wall, foot)
+    {
+        let boxRatio = wall.dimens.x/wall.dimens.y;
+        let xdiff = player[0].bounds.points[foot].x - wall.center.x;
+        let ydiff = player[0].bounds.points[foot].y - wall.center.y;
+
+        let slope = xdiff/ydiff;
+        if(slope > -boxRatio && slope < boxRatio)
+        {
+            let flip = ydiff < 0 ? 1 : -1;
+            player[0].move(0, -(ydiff + (flip * wall.dimens.y)/2));
+        }
+        else
+        {
+            let flip = xdiff < 0 ? 1 : -1;
+            player[0].move(-(xdiff + (flip * wall.dimens.x)/2), 0);
         }
     }
 }

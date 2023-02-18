@@ -33,13 +33,13 @@ Game stuff:
         1. Collisions
             1.attacks to entity [done]
             2.attacks to player [done]
-            3.player to doors
-            4.player to walls
+            3.player to doors [done]
+            4.player to walls [done]
             5.player to pitfalls
             6.player to secret door
         2. Rooms
-            1.Walls
-            2.Doors
+            1.Walls [done]
+            2.Doors [done]
             3.Entities
             4.Music
         3. Rooms Builder (some way of easily making rooms) [Version 1 done]

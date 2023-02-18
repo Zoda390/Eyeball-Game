@@ -8,7 +8,7 @@ class Item {
 
     render(x, y){
         push();
-        image(itemImgs[this.pngNum], x, y);
+        image(itemImgs[this.pngNum][0], x, y);
         pop();
     }
 }
@@ -28,6 +28,10 @@ class Weapon extends Item {
     }
 
     use(x, y, direction) {};
+}
+
+class Melee extends Weapon {
+    
 }
 
 class RangedWeapon extends Weapon {

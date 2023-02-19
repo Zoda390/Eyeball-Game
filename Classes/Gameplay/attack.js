@@ -47,3 +47,30 @@ class Projectile extends Attack
         layer2.pop();
     }
 }
+
+class Swing extends Attack
+{
+    constructor(x, y, direction, source, length, duration)
+    {
+        super(x, y, direction, source);
+        this.length = length;
+        this.duration = duration;
+        this.current = 0;
+    }
+
+    update()
+    {
+        
+    }
+
+    render()
+    {
+        super.render();
+
+        layer2.push();
+        layer2.fill(this.fillColor);
+        arc
+        
+        this.bounds.render();
+    }
+}

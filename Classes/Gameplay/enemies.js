@@ -14,8 +14,7 @@ class Entity {
     update(){};
 
     render(){
-        if(EntityCollider.visualize == true)
-            this.bounds.render();
+        this.bounds.render();
     };
 
     move(x, y){
@@ -40,6 +39,8 @@ class LivingEntity extends Entity {
         this.pngNum; //index of image found in LivingEntityImgs[]
         this.weapon;
         this.facing = 0;
+        this.frame = 0;
+        this.mframe = 3;
     }
 
     render() {
@@ -51,8 +52,9 @@ class LivingEntity extends Entity {
         layer2.rectMode(CENTER);
         
 
-        if(this.pngNum == 0){
-            layer2.image(entityImgs[this.pngNum], this.pos.x, this.pos.y);
+        if(this.pngNum == 0 || this.pngNum == 1){
+            entityImgs[this.pngNum][this.facing].setFrame(floor(this.frame));
+            layer2.image(entityImgs[this.pngNum][this.facing], this.pos.x, this.pos.y);
         }
         else{
             layer2.fill(this.fillColor);
@@ -64,7 +66,32 @@ class LivingEntity extends Entity {
 
     attack(direction)
     {
+        if(direction == 3){
+            this.facing = 0;
+        }
+        if(direction == 4){
+            this.facing = 1;
+        }
         this.weapon.use(this.bounds.center.x + (this.weapon.origin.x * this.bounds.dimens.x), this.bounds.center.y + (this.weapon.origin.y * this.bounds.dimens.y), direction);
+    }
+
+    move(x, y){
+        if(x < 0){
+            this.facing = 0;
+            
+        }
+        else if(x > 0){
+            this.facing = 1;
+        }
+        if(abs(x) > 0 || abs(y) > 0){
+            if(abs(x) == 0){
+                this.frame = (this.frame+0.08)%this.mframe;
+            }
+            else{
+                this.frame = (this.frame+0.11)%this.mframe;
+            }
+        }
+        super.move(x, y);
     }
 }
 

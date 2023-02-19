@@ -1,11 +1,10 @@
 class EntityCollider
 {
     static visualize = true;
-
     constructor(centerX, centerY, width, height)
     {
         this.center = createVector(centerX, centerY);
-        this.dimens = createVector(height, width);
+        this.dimens = createVector(width, height);
         this.points = [];
     }
 
@@ -18,6 +17,9 @@ class EntityCollider
 
     render()
     {
+        if(!EntityCollider.visualize)
+            return;
+            
         layerdb.push();
         layerdb.fill(255, 0, 0, 100);
         layerdb.stroke(255, 0, 0, 255);
@@ -29,10 +31,6 @@ class EntityCollider
         {
             layerdb.circle(point.x, point.y, 10);
         }
-        //let temp = this.bottomCorners();
-
-        //layerdb.circle(temp.x, temp.y, 10);
-        //layerdb.circle(temp.z, temp.y, 10);
 
         layerdb.pop();
     }
@@ -45,10 +43,9 @@ class EntityCollider
     contains(x, y)
     {
         let corners = this.bottomCorners();
-        let horizBounds = x > corners.x && x < corners.z;
-        let vertBounds = y < corners.y && y > corners.y - this.dimens.y;
-
-        return horizBounds && vertBounds;
+        let horizBounds = (x >= corners.x) && (x <= corners.z);
+        let vertBounds = (y <= corners.y) && (y >= corners.y - this.dimens.y);
+        return (horizBounds && vertBounds);
     }
 
     containsCollider(collider)
@@ -70,11 +67,5 @@ class EntityCollider
     static centerIntersect(pusher, holder)
     {
         return holder.contains(pusher.center.x, pusher.center.y);
-    }
-
-    static feetIntersect(footHaver, other)
-    {
-        let cornerData = footHaver.bottomCorners();
-        return other.contains(cornerData.x, cornerData.y) && other.contains(cornerData.z, cornerData.y);
     }
 }

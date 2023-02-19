@@ -16,8 +16,7 @@ class LifetimeManager
                 i--;
             }
         }
-
-        console.log(this.attacks.length);
+        
         for(let i = 0; i < this.attacks.length; i++) 
         {
             if(this.attacks[i].despawn)

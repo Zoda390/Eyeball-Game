@@ -174,15 +174,16 @@ function layer7Draw(){
     colorShader1.setUniform("tex0", layerbg);
     colorShader1.setUniform("tex1", layer0);
     colorShader1.setUniform("pal1", gamePalette);
-    colorShader1.setUniform("pal2", itemImgs[player[0].eyes[0].pngNum]);
-    colorShader1.setUniform("pal3", itemImgs[player[0].eyes[1].pngNum]);
-
+    colorShader1.setUniform("pal2", itemImgs[player[0].eyes[0].pngNum][1]);
+    colorShader1.setUniform("pal3", itemImgs[player[0].eyes[1].pngNum][1]);
+    
+    layer2.image(fg, 0, 0);
     layer3.rect(-width/2, -height/2, width, height);
     colorShader3.setUniform("tex0", layer1);
     colorShader3.setUniform("tex1", layer2);
     colorShader3.setUniform("pal1", gamePalette);
-    colorShader3.setUniform("pal2", itemImgs[player[0].eyes[0].pngNum]);
-    colorShader3.setUniform("pal3", itemImgs[player[0].eyes[1].pngNum]);
+    colorShader3.setUniform("pal2", itemImgs[player[0].eyes[0].pngNum][1]);
+    colorShader3.setUniform("pal3", itemImgs[player[0].eyes[1].pngNum][1]);
     layer2.clear();
 
     layer5.rect(-width/2, -height/2, width, height);
@@ -196,8 +197,8 @@ function layer7Draw(){
     colorShader5.setUniform("tex0", layer3);
     colorShader5.setUniform("tex1", layer4);
     colorShader5.setUniform("pal1", gamePalette);
-    colorShader5.setUniform("pal2", itemImgs[player[0].eyes[0].pngNum]);
-    colorShader5.setUniform("pal3", itemImgs[player[0].eyes[1].pngNum]);
+    colorShader5.setUniform("pal2", itemImgs[player[0].eyes[0].pngNum][1]);
+    colorShader5.setUniform("pal3", itemImgs[player[0].eyes[1].pngNum][1]);
     colorShader5.setUniform("pal4", greyGamePalette);
     
     //background(0);

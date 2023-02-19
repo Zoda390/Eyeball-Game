@@ -14,7 +14,7 @@ class Player extends LivingEntity {
 
         this.eyes.push(new Eyeball(0));
         this.eyes.push(new Eyeball(1));
-        this.weapon = new RangedWeapon(this, 0, -0.3, 10, 100, 0, false);
+        this.weapon = new RangedWeapon(this, 0, -0.3, 10, 650, 0, false);
     }
 
     takeInput()
@@ -25,6 +25,7 @@ class Player extends LivingEntity {
 
         posX *= 5;
         posY *= 5;
+
 
         let direction;
         if(keyIsDown(UP_ARROW))

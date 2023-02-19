@@ -1,6 +1,6 @@
 class EntityCollider
 {
-    static visualize = false;
+    static visualize = true;
     constructor(centerX, centerY, width, height)
     {
         this.center = createVector(centerX, centerY);
@@ -8,11 +8,19 @@ class EntityCollider
         this.points = [];
     }
 
+    setPos(point)
+    {
+        this.center = point;
+    }
+
     shiftPos(point)
     {
         this.center.add(point);
-        for(let special of this.points)
-            special.add(point);
+    }
+
+    getPointPos(index)
+    {
+        return createVector(this.center.x + this.points[index].x, this.center.y + this.points[index].y);
     }
 
     render()
@@ -27,8 +35,9 @@ class EntityCollider
         layerdb.rect(this.center.x, this.center.y, this.dimens.x, this.dimens.y);
         layerdb.fill(0, 255, 0, 100);
         layerdb.stroke(0, 255, 0, 255);
-        for(let point of this.points)
+        for(let index in this.points)
         {
+            let point = this.getPointPos(index);
             layerdb.circle(point.x, point.y, 10);
         }
 
@@ -51,7 +60,12 @@ class EntityCollider
     containsCollider(collider)
     {
         let otherBottoms = collider.bottomCorners();
-        let otherCorners = [[otherBottoms.x, otherBottoms.y - collider.dimens.y], [otherBottoms.z, otherBottoms.y - collider.dimens.y], [otherBottoms.x, otherBottoms.y], [otherBottoms.z, otherBottoms.y]];
+        let otherCorners = [
+            [otherBottoms.x, otherBottoms.y - collider.dimens.y], 
+            [otherBottoms.z, otherBottoms.y - collider.dimens.y], 
+            [otherBottoms.x, otherBottoms.y], 
+            [otherBottoms.z, otherBottoms.y]
+        ];
 
         for(let point of otherCorners)
             if(this.contains(point[0], point[1]))
@@ -61,7 +75,7 @@ class EntityCollider
 
     static anyIntersect(a, b)
     {
-        return a.containsCollider(b) || b.containsCollider(a);
+        return a.contains(b.center.x, b.center.y) || b.contains(a.center.x, a.center.y) || a.containsCollider(b) || b.containsCollider(a);
     }
 
     static centerIntersect(pusher, holder)

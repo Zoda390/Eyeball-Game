@@ -7,9 +7,9 @@ class Item {
     }
 
     render(x, y){
-        push();
-        image(itemImgs[this.pngNum][0], x, y);
-        pop();
+        layer4.push();
+        layer4.image(itemImgs[this.pngNum][0], x, y);
+        layer4.pop();
     }
 }
 
@@ -20,32 +20,42 @@ class Eyeball extends Item {
 }
 
 class Weapon extends Item {
-    constructor(owner, x, y, damage, pngNum, pickup) {
+    constructor(owner, x, y, damage, knockback, duration, cooldown, pngNum, pickup, attackType, a, b, c) {
         super(pngNum, pickup);
+        this.origin = createVector(x, y);
         this.owner = owner;
         this.damage = damage; //amount of hp this weapon does
-        this.origin = createVector(x, y);
-    }
+        this.knockback = knockback;
 
-    use(x, y, direction) {};
-}
-
-class Melee extends Weapon {
-    
-}
-
-class RangedWeapon extends Weapon {
-    constructor(owner, x, y, damage, cooldown, pngNum, pickup) {
-        super(owner, x, y, damage, pngNum, pickup); //sus
+        this.duration = duration
         this.cooldown = cooldown;
         this.lastShot = 0;
+
+        this.attackType = attackType;
+        this.a = a;
+        this.b = b;
+        this.c = c;
     }
 
-    use(x, y, direction) {
+    use(direction) {
         let time = Date.now();
         if(direction != 0 && time - this.lastShot > this.cooldown)
         {
-            rooms[CurrentRoomId].attacks.push(new Projectile(x, y, direction, this));
+            let atks = rooms[CurrentRoomId].attacks;
+            let x = this.owner.bounds.center.x + (this.origin.x * this.owner.bounds.dimens.x);
+            let y = this.owner.bounds.center.y + (this.origin.y * this.owner.bounds.dimens.y);
+
+            switch(this.attackType){
+                case "Swing":
+                    atks.push(new Swing(x, y, direction, this, this.a, this.b, this.c));
+                    break;
+                case "Projectile":
+                    atks.push(new Projectile(x, y, direction, this))
+                    break;
+                case "Mental":
+                    atks.push(new Mental(x, y, direction, this, this.a))
+                    break;
+            }
             this.lastShot = time;
         }
     }

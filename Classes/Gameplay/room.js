@@ -19,17 +19,16 @@ class Room{
         let temp = [];
         for(let i = 0; i < objs.length; i++){
             if(objs[i].name == "eyeWalker"){
-                temp.push(new Monster(objs[i].x, objs[i].y, 100, 10, [allEyes[floor(random(0, allEyes.length))]], "#000000"));
+                temp.push(new Monster(objs[i].x, objs[i].y, 100, 10, [allEyes[floor(random(0, allEyes.length))]], "#000000", 2));
             }
             if(objs[i].name == "eyeFloater"){
-                temp.push(new Monster(objs[i].x, objs[i].y, 100, 10, [allEyes[floor(random(0, allEyes.length))]], "#000000"));
+                temp.push(new Monster(objs[i].x, objs[i].y, 100, 10, [allEyes[floor(random(0, allEyes.length))]], "#000000", 4));
             }
             if(objs[i].name == "tallBug"){
-                temp.push(new Monster(objs[i].x, objs[i].y, 200, 10, [allEyes[floor(random(0, allEyes.length))], allEyes[floor(random(0, allEyes.length))]], "#000000"));
+                temp.push(new Monster(objs[i].x, objs[i].y, 200, 10, [allEyes[floor(random(0, allEyes.length))], allEyes[floor(random(0, allEyes.length))]], "#000000", 3));
             }
             if(objs[i].name == "GremlinBug"){
-                temp.push(new Monster(objs[i].x, objs[i].y, 100, 10, [allEyes[floor(random(0, allEyes.length))], allEyes[floor(random(0, allEyes.length))]], "#000000"));
-                temp[temp.length-1].pngNum = 1;
+                temp.push(new Monster(objs[i].x, objs[i].y, 100, 10, [allEyes[floor(random(0, allEyes.length))], allEyes[floor(random(0, allEyes.length))]], "#000000", 1));
             }
             if(objs[i].name == "pitfallTrap"){
                 temp.push(new Entity(objs[i].x, objs[i].y, "#0000FFFF"));
@@ -51,7 +50,14 @@ class Room{
 
     update(){
         //update
-        player[0].takeInput();
+        if(!uim.showInv){
+            player[0].takeInput();
+        }
+
+        for(let i = 0; i < this.entities.length; i++) {
+            this.entities[i].update();
+        }
+
         for(let i = 0; i < this.attacks.length; i++) {
             this.attacks[i].update();
         }
@@ -91,16 +97,16 @@ class Door{
         this.pos = createVector(x, y);
         this.direction = direction;
         if(direction == 0){ //up
-            this.bounds = new EntityCollider(x+(170/2), y-(250/2)-130, 170, 250);
+            this.bounds = new EntityCollider(x+(102/2), y-(150/2)-78, 102, 150);
         }
         if(direction == 1){ //down
-            this.bounds = new EntityCollider(x+(170/2)-11, y+(50/2)+40, 170, 50);
+            this.bounds = new EntityCollider(x+(102/2)-7, y+(150/2)+60, 102, 150);
         }
         if(direction == 2){ //left
-            this.bounds = new EntityCollider(x+(135/2), y-(250/2)-20, 250, 135);
+            this.bounds = new EntityCollider(x-(150/2)-24, y-(102/2), 150, 102);
         }
         if(direction == 3){ //right
-            this.bounds = new EntityCollider(x+(135/2)-7, y+(50/2)-10, 50, 135);
+            this.bounds = new EntityCollider(x+(150/2)+24, y-(102/2), 150, 102);
         }
     }
 
@@ -123,10 +129,20 @@ class Door{
         temp[1] = parseInt(temp[1]);
         temp[0] += x;
         temp[1] += y;
-        //console.log(temp[1])
-        player[0].move(-x*(width), -y*(height+400));
+        let tdoor = rooms[(temp[0] + "_" + temp[1])].doors[this.flipDirection(this.direction)];
+        player[0].pos = createVector(tdoor.pos.x + (x==0?(tdoor.bounds.dimens.x/2):0) + (x*100), tdoor.pos.y + (y==0?(tdoor.bounds.dimens.y/2):0) + (y*100));
+        player[0].bounds.center = createVector(tdoor.pos.x + (x==0?(tdoor.bounds.dimens.x/2):0) + (x*100), tdoor.pos.y + (y==0?(tdoor.bounds.dimens.y/2):0) + (y*100));
 
         //smooth transition here?
         CurrentRoomId = temp[0] + "_" + temp[1];
+    }
+
+    flipDirection(d){
+        switch(d){
+            case 0: return 1;
+            case 1: return 0;
+            case 2: return 3;
+            case 3: return 2;
+        }
     }
 }

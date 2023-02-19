@@ -43,7 +43,7 @@ Game stuff:
             3.Entities
             4.Music
         3. Rooms Builder (some way of easily making rooms) [Version 1 done]
-        4. Hp Ui
+        4. Hp Ui [done]
         5. Enemy AI
         6. Death = restart map
         7. Checkpoints to save at

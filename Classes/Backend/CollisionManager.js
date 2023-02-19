@@ -13,8 +13,11 @@ class CollisionManager
         for(let door of rooms[CurrentRoomId].doors)
         {
             if(door !== 0){
-                let leftFoot = door.bounds.contains(player[0].bounds.points[0].x, player[0].bounds.points[0].y);
-                let rightFoot = door.bounds.contains(player[0].bounds.points[1].x, player[0].bounds.points[1].y);
+                let left = player[0].bounds.getPointPos(0);
+                let right = player[0].bounds.getPointPos(1);
+                
+                let leftFoot = door.bounds.contains(left.x, right.y);
+                let rightFoot = door.bounds.contains(right.x, right.y);
 
                 if(leftFoot || rightFoot)
                 {
@@ -25,77 +28,31 @@ class CollisionManager
         }
 
         //check all attacks against all enemies/player
-        for(let i = 0; i < this.attacks.length; i++)
+        this.livingEntityAttackCheck(player[0]);
+
+        for(let enemy of this.enemies)
         {
-            if(this.player[0] != this.attacks[i].source.owner)
-            {
-                if(EntityCollider.anyIntersect(this.attacks[i].bounds, this.player[0].bounds))
-                {
-                    this.player[0].hp -= this.attacks[i].source.damage;
-                    this.attacks[i].despawn = true;
-
-                    let x = 0, y = 0;
-                    switch(dir)
-                    {
-                        case 1: y = -8; break;
-                        case 2: y = 8; break;
-                        case 3: x = -8; break;
-                        case 4: x = 8; break;
-                        this.player[0].move(x, y);
-                    }
-                }
-            }
-
-            for(let j = 0; j < this.enemies.length; j++)
-            {
-                if(this.enemies[j] != this.attacks[i].source.owner)
-                {
-                    if(EntityCollider.anyIntersect(this.attacks[i].bounds, this.enemies[j].bounds))
-                    {
-                        this.enemies[j].hp -= this.attacks[i].source.damage;
-                        this.attacks[i].despawn = true;
-
-                        let dir = this.attacks[i].direction;
-                        let x = 0, y = 0;
-
-                        switch(dir)
-                        {
-                            case 1: y = -8; break;
-                            case 2: y = 8; break;
-                            case 3: x = -8; break;
-                            case 4: x = 8; break;
-                        }
-                        this.enemies[j].move(x, y);
-
-                        if(this.enemies[j].hp <=0)
-                            this.enemies[j].despawn = true;
-                    }
-                }
-            }
+            this.livingEntityAttackCheck(enemy);
         }
-
+            
         //check pitfalls against enemies/player
 
         //check all entities against walls
-        //player check
-        for(let wall of rooms[CurrentRoomId].walls)
-        {
-            let leftFoot = wall.contains(player[0].bounds.points[0].x, player[0].bounds.points[0].y);
-            let rightFoot = wall.contains(player[0].bounds.points[1].x, player[0].bounds.points[1].y);
+        this.livingEntityWallCheck(player[0]);
 
-            if(leftFoot)
-                this.playerCheck(wall, 0);
-            if(rightFoot)
-                this.playerCheck(wall, 1);
+        for(let entity of rooms[CurrentRoomId].entities)
+        {
+            this.livingEntityWallCheck(entity);
         }
 
         //attacks check
         for(let attack of rooms[CurrentRoomId].attacks)
         {
-            let id = 1;
+            let id = 0;
             for(let wall of rooms[CurrentRoomId].walls)
             {
-                let touching = wall.contains(attack.bounds.points[id].x, attack.bounds.points[id].y); //EntityCollider.centerIntersect(attack.bounds, wall) //EntityCollider.anyIntersect(wall, attack.bounds)
+                let point = attack.bounds.getPointPos(id);
+                let touching = wall.contains(point.x, point.y); 
                 if(touching)
                 {
                     attack.despawn = true;
@@ -103,35 +60,74 @@ class CollisionManager
                 }
             }
         }
-        
+    }
 
-        //for(let i = 0; i < this.enemies.length; i++)
-            //wall.restrict(this.enemies[i]);
-
-        for(let i = 0; i < this.attacks.length; i++)
+    livingEntityAttackCheck(entity)
+    {
+        for(let attack of this.attacks)
         {
-            let checking = this.attacks[i].bounds.points[0];
-            if(this.attacks[i].direction == 1)
-                checking = this.attacks[i].bounds.points[1];
+            if(attack.canHit(entity) && EntityCollider.anyIntersect(attack.bounds, entity.bounds))
+            {
+                attack.damage(entity);
+            }
         }
     }
 
-    playerCheck(wall, foot)
+    livingEntityWallCheck(entity)
     {
-        let boxRatio = wall.dimens.x/wall.dimens.y;
-        let xdiff = player[0].bounds.points[foot].x - wall.center.x;
-        let ydiff = player[0].bounds.points[foot].y - wall.center.y;
+        if(entity.pos.x < 0 || entity.pos.x > 900 || entity.pos.y < 0 || entity.pos.x > 900)
+            entity.set(width/2, height/2);
 
-        let slope = xdiff/ydiff;
-        if(slope > -boxRatio && slope < boxRatio)
+        for(let wall of rooms[CurrentRoomId].walls)
         {
-            let flip = ydiff < 0 ? 1 : -1;
-            player[0].move(0, -(ydiff + (flip * wall.dimens.y)/2));
+            let left = entity.bounds.getPointPos(0);
+            let right = entity.bounds.getPointPos(1);
+
+            let leftFoot = wall.contains(left.x, left.y);
+            let rightFoot = wall.contains(right.x, right.y);
+
+            let point;
+            if(leftFoot && rightFoot)
+                point = createVector((left.x + right.y)/2, (left.y + right.y)/2);
+            else if(leftFoot)
+                point = left;
+            else if(rightFoot)
+                point = right;
+            else
+                continue;
+
+            this.livingEntityAdjust(entity, wall, point);
         }
-        else
+    }
+
+    livingEntityAdjust(entity, wall, intersectPoint)
+    {
+        let xHalf = wall.dimens.x/2, yHalf = wall.dimens.y/2;
+
+        let left = abs(intersectPoint.x - wall.center.x + xHalf);
+        let right = abs(intersectPoint.x - wall.center.x - xHalf);
+        let top = abs(intersectPoint.y - wall.center.y + yHalf);
+        let bottom = abs(intersectPoint.y - wall.center.y - yHalf);
+
+        let horizMax = left < right ? left : right;
+        let vertMax = top < bottom ? top : bottom;
+
+        let min = horizMax < vertMax ? horizMax : vertMax;
+
+        switch(min)
         {
-            let flip = xdiff < 0 ? 1 : -1;
-            player[0].move(-(xdiff + (flip * wall.dimens.x)/2), 0);
+            case left:
+                entity.move(-(min + 0.01), 0);
+                break;
+            case right:
+                entity.move((min + 0.01), 0);
+                break;
+            case top:
+                entity.move(0, -(min + 0.01));
+                break;
+            case bottom:
+                entity.move(0, (min + 0.01));
+                break;
         }
     }
 }

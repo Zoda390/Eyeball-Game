@@ -1,6 +1,6 @@
 class EntityCollider
 {
-    static visualize = true;
+    static visualize = false;
     constructor(centerX, centerY, width, height)
     {
         this.center = createVector(centerX, centerY);

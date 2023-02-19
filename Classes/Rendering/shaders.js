@@ -168,7 +168,6 @@ function setupGraphics(){
 
 function layer7Draw(){
     layerbg.background(10);
-    layer0.image(bg, 0, 0);
 
     layer1.rect(-width/2, -height/2, width, height);
     colorShader1.setUniform("tex0", layerbg);
@@ -176,8 +175,7 @@ function layer7Draw(){
     colorShader1.setUniform("pal1", gamePalette);
     colorShader1.setUniform("pal2", itemImgs[player[0].eyes[0].pngNum][1]);
     colorShader1.setUniform("pal3", itemImgs[player[0].eyes[1].pngNum][1]);
-    
-    layer2.image(fg, 0, 0);
+
     layer3.rect(-width/2, -height/2, width, height);
     colorShader3.setUniform("tex0", layer1);
     colorShader3.setUniform("tex1", layer2);
@@ -190,6 +188,10 @@ function layer7Draw(){
     //draw UI
     layer4.clear();
     layer4.fill(100);
+    layer4.image(uiImgs[2], 0, 0);
+    layer4.image(uiImgs[0].get(0, 0, floor((player[0].hp/player[0].mhp)*195)+95, 105), 0, 0);
+    layer4.image(uiImgs[1].get(0, 0, floor((min(Date.now()-player[0].weapon.lastShot, player[0].weapon.cooldown)/player[0].weapon.cooldown)*260)+45, 105), 0, 0);
+    layer4.image(uiImgs[3], 0, 0);
     
     //draw Items
     layer4.image(layer4, 0, 0);

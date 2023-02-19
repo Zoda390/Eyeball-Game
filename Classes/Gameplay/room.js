@@ -63,7 +63,7 @@ class Room{
     
     render(){
         //draw
-        layer0.image(bgImgs[this.pngNum], 0, 0);
+        layer0.image(bgImgs[this.pngNum][0], 0, 0);
         for(let i = 0; i<this.entities.length; i++) {
             this.entities[i].render();
         }
@@ -73,6 +73,7 @@ class Room{
         for(let i = 0; i < this.attacks.length; i++) {
             this.attacks[i].render();
         }
+        layer2.image(bgImgs[this.pngNum][1], 0, 0);
 
         for(let i = 0; i < this.walls.length; i++){
                this.walls[i].render();
@@ -90,10 +91,10 @@ class Door{
         this.pos = createVector(x, y);
         this.direction = direction;
         if(direction == 0){ //up
-            this.bounds = new EntityCollider(x+(135/2), y-(250/2)-130, 135, 250);
+            this.bounds = new EntityCollider(x+(170/2), y-(250/2)-130, 170, 250);
         }
         if(direction == 1){ //down
-            this.bounds = new EntityCollider(x+(135/2)-7, y+(50/2)+30, 135, 50);
+            this.bounds = new EntityCollider(x+(170/2)-11, y+(50/2)+40, 170, 50);
         }
         if(direction == 2){ //left
             this.bounds = new EntityCollider(x+(135/2), y-(250/2)-20, 250, 135);

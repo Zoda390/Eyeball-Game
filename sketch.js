@@ -12,7 +12,7 @@ function preload() {
 }
 
 function setup() {
-    createCanvas(1136, 951);
+    createCanvas(1500, 1500);
     setupGraphics();
     makeMap();
     player.push(new Player(width/2, height/2, "#5DB979"));

@@ -162,6 +162,13 @@ function setupGraphics(){
     layer4 = createGraphics(width, height);
     layer5 = createGraphics(width, height, WEBGL);
 
+    layer0.canvas.getContext("2d", {willReadFrequently: true});
+    layer1.canvas.getContext("2d", {willReadFrequently: true});
+    layer2.canvas.getContext("2d", {willReadFrequently: true});
+    layer3.canvas.getContext("2d", {willReadFrequently: true});
+    layer4.canvas.getContext("2d", {willReadFrequently: true});
+    layer5.canvas.getContext("2d", {willReadFrequently: true});
+
     layer0.noStroke();
     layer1.noStroke();
     layer2.noStroke();
@@ -227,7 +234,7 @@ function drawUI(){
   layer4.clear();
   layer4.fill(100);
   layer4.image(uiImgs[2], 0, 0);
-  layer4.image(uiImgs[0].get(0, 0, floor((player[0].hp/player[0].mhp)*195)+95, 105), 0, 0);
+  layer4.image(uiImgs[0].get(0, 0, floor((max(player[0].hp/player[0].mhp, 0))*195)+95, 105), 0, 0);
   layer4.image(uiImgs[1].get(0, 0, floor((min(Date.now()-player[0].weapon.lastShot, player[0].weapon.cooldown)/player[0].weapon.cooldown)*260)+45, 105), 0, 0);
   uim.render();
 }

@@ -43,8 +43,8 @@ class LivingEntity extends Entity {
         this.inv = []; //index 0 is held item
         this.eyes = [];
         this.pngNum = pngNum; //index of image found in LivingEntityImgs[]
-        this.weapon;
         this.facing = 0;
+        this.direction = 0;
         this.frame = 0;
         this.mframe = 3;
 
@@ -52,6 +52,14 @@ class LivingEntity extends Entity {
         let corners = this.bounds.bottomCorners();
         this.bounds.points.push(createVector(corners.x - this.bounds.center.x, corners.y - this.bounds.center.y));
         this.bounds.points.push(createVector(corners.z - this.bounds.center.x, corners.y - this.bounds.center.y));
+
+        
+        let swg = new Weapon(this, 0, 0, 25, 70, 250, 1000, 9, false, "Swing", 60, 100, 250);
+        let mnt = new Weapon(this, 0, -0.3, 0.3, 100, 4000, 5000, 10, false, "Mental", 300, 100, 250);
+        let prj = new Weapon(this, 0, -0.3, 10, 20, 10000, 400, 11, false, "Projectile", 60, 100, 250);
+        
+        this.weapon = swg;
+        this.inv.push(swg, mnt, prj)
     }
 
     takeInput()
@@ -88,6 +96,9 @@ class LivingEntity extends Entity {
         if(direction == 4){
             this.facing = 1;
         }
+        if(Date.now() - this.inv[0].lastShot >= this.inv[0].cooldown){
+            this.weapon = this.inv[0];
+        }
         this.weapon.use(direction);
     }
 
@@ -115,12 +126,7 @@ class Player extends LivingEntity {
         this.eyes.push(new Eyeball(0));
         this.eyes.push(new Eyeball(1));
 
-        let swg = new Weapon(this, 0, 0, 25, 70, 250, 1000, 9, false, "Swing", 60, 100, 250);
-        let ment = new Weapon(this, 0, -0.3, 0.3, 100, 4000, 5000, 10, false, "Mental", 300, 100, 250);
-        let prj = new Weapon(this, 0, -0.3, 10, 20, 10000, 400, 11, false, "Projectile", 60, 100, 250);
-
-        this.weapon = ment;
-        this.inv = [this.weapon, swg, prj, new Eyeball(2), new Eyeball(3), new Eyeball(4), new Eyeball(5), new Eyeball(6), new Eyeball(7), new Eyeball(8), 0, 0];
+        this.inv.push(new Eyeball(2), new Eyeball(3), new Eyeball(4), new Eyeball(5), new Eyeball(6), new Eyeball(7), new Eyeball(8), 0, 0);
     }
 
     takeInput()
@@ -132,21 +138,18 @@ class Player extends LivingEntity {
         posX *= 5;
         posY *= 5;
 
-        let direction;
         if(keyIsDown(UP_ARROW))
-            direction = 1;
+            this.direction = 1;
         else if(keyIsDown(DOWN_ARROW))
-            direction = 2;
+            this.direction = 2;
         else if(keyIsDown(LEFT_ARROW))
-            direction = 3;
+            this.direction = 3;
         else if(keyIsDown(RIGHT_ARROW))
-            direction = 4;
+            this.direction = 4;
         else
-            direction = 0;
+            this.direction = 0;
         this.move(posX, posY);
-        this.attack(direction);
-
-        
+        this.attack(this.direction);        
     }
 }
 
@@ -154,35 +157,39 @@ class Monster extends LivingEntity {
     constructor(x, y, hp, damage, eyes, color, pngNum) {
         super(x, y, hp, color, pngNum);
         this.weapon = new Weapon(this, damage, 0, false);
-        //this.inv.push();
+        
         this.eyes = eyes;
-        this.pathProgress = 100;
+        this.pathAccuracy = 5;
         this.currentDestination = createVector(Math.random() * 300 + 300, Math.random() * 300 + 300);
+
+        let temp = this.inv[0];
+        this.inv[0] = this.inv[2];
+        this.inv[2] = temp;
+        this.weapon = this.inv[0];
     }
 
     takeInput()
     {
-        /*if(this.pathProgress >= 99)
+        let diff = createVector((this.currentDestination.x - this.pos.x), (this.currentDestination.y - this.pos.y));
+        let distance = this.pos.dist(this.currentDestination);
+        if(distance <= this.pathAccuracy)
         {
             this.currentDestination = createVector(Math.random() * 300 + 300, Math.random() * 300 + 300);
-            console.log(this.currentDestination);
         }
-        let normalized = createVector(this.pos.x - this.currentDestination.x, this.pos.y - this.currentDestination.y);
-        normalized.normalize();
-        normalized.mult(5);
 
-        if(this.pos.x - this.currentDestination.x < 0)
-            normalized.x = normalized.x * -1;
+        
 
-        if(this.pos.y - this.currentDestination.y < 0)
-            normalized.y = normalized.y * -1;
-        this.move(normalized.x, normalized.y);
-        this.pathProgress = (abs(this.pos.x-this.currentDestination.x) + abs(this.pos.y - this.currentDestination.y));*/
+        diff.normalize();
+        this.move(diff.x, diff.y);
     }
 
     update()
     {
         this.takeInput();
+            
+        this.attack(this.direction);
+
+        //console.log(this.direction);
 
         if(this.hp <= 0)
             this.despawn = true;

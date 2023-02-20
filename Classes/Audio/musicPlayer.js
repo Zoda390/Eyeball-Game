@@ -5,7 +5,7 @@ class MusicPlayer {
 
         this.musicMixNotAnotherClassMember = 1;
 
-        console.log(this.musicMixNotAnotherClassMember);
+        //console.log(this.musicMixNotAnotherClassMember);
         
         document.body.appendChild(this.audioLow);
         document.body.appendChild(this.audioHigh);

@@ -29,6 +29,7 @@ class Room{
             }
             if(objs[i].name == "GremlinBug"){
                 temp.push(new Monster(objs[i].x, objs[i].y, 100, 10, [allEyes[floor(random(0, allEyes.length))], allEyes[floor(random(0, allEyes.length))]], "#000000", 1));
+                temp[temp.length-1].mframe = 2;
             }
             if(objs[i].name == "pitfallTrap"){
                 temp.push(new Entity(objs[i].x, objs[i].y, "#0000FFFF"));

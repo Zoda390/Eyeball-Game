@@ -28,9 +28,9 @@ function imgPreload(){
     itemImgs.push([loadImage("Assets/Imgs/Items/Eyeballs/eye7.png"), loadImage("Assets/Imgs/Items/Eyeballs/eye7_palette.png")]);
     itemImgs.push([loadImage("Assets/Imgs/Items/Eyeballs/eye8.png"), loadImage("Assets/Imgs/Items/Eyeballs/eye8_palette.png")]);
     itemImgs.push([loadImage("Assets/Imgs/Items/Eyeballs/eye9.png"), loadImage("Assets/Imgs/Items/Eyeballs/eye9_palette.png")]);
-    itemImgs.push([loadImage("Assets/Imgs/Items/Weapons/dagger.png")]);
-    itemImgs.push([loadImage("Assets/Imgs/Items/Weapons/futureBow.png")]);
-    itemImgs.push([loadImage("Assets/Imgs/Items/Weapons/futurePistal.png")]);
+    itemImgs.push([loadImage("Assets/Imgs/Items/Weapons/dagger.png"), loadImage("Assets/Imgs/Items/Weapons/dagger.png")]);
+    itemImgs.push([loadImage("Assets/Imgs/Items/Weapons/futurePistal.png"), loadImage("Assets/Imgs/Items/Weapons/mental_damage.png")]);
+    itemImgs.push([loadImage("Assets/Imgs/Items/Weapons/futureBow.png"), loadImage("Assets/Imgs/Items/Weapons/futureArrow.png")]);
 
     //Backgrounds
     bgImgs.push([loadImage("Assets/Imgs/Rooms/1_2.png"), loadImage("Assets/Imgs/Rooms/1_2_fore.png")]);

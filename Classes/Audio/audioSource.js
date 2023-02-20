@@ -59,8 +59,8 @@ function ClearFinishedSounds()
 }
 
 //uses
-hoe_sound = new Sound(['audio/Hoe.wav'], 0.5); //preload
-hoe_sound.play(); //wherever you need the sfx played
+//hoe_sound = new Sound(['audio/Hoe.wav'], 0.5); //preload
+//hoe_sound.play(); //wherever you need the sfx played
 
 //add to musicPlayer.update()
 var fxlist = document.getElementsByClassName("soundfx");

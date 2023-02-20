@@ -80,11 +80,11 @@ class Projectile extends Attack
     {
         super.render();
         layer2.push();
-        layer2.fill(this.fillColor);
-        layer2.circle(this.pos.x, this.pos.y, 15);
+        layer2.image(itemImgs[this.source.pngNum][1], this.pos.x, this.pos.y, this.bounds.dimens.x, this.bounds.dimens.y);
         layer2.fill("#1F1F29");
         let point = this.bounds.getPointPos(0);
         layer2.ellipse(point.x, point.y, 15, 10);
+        //ahh
         layer2.pop();
     }
 }
@@ -120,7 +120,7 @@ class Swing extends Attack
         {
             this.bounds.dimens.x = abs(this.xTip);
             this.bounds.dimens.y = this.width;
-            this.bounds.center.x += this.xTip/2;    
+            this.bounds.center.x += this.xTip/2;
         }
         this.bounds.points.push(createVector(this.xTip/2, this.yTip/2));
     }
@@ -143,9 +143,9 @@ class Swing extends Attack
         super.render();
 
         layer2.push();
-        layer2.rectMode(CENTER);
-        layer2.fill(this.fillColor);
-        layer2.rect(this.pos.x, this.pos.y, this.bounds.dimens.x, this.bounds.dimens.y);
+        //layer2.imageMode(CENTER);
+        //layer2.rectMode(CENTER);
+        layer2.image(itemImgs[this.source.pngNum][1], this.pos.x-(this.bounds.dimens.x/2), this.pos.y-(this.bounds.dimens.y/2), this.bounds.dimens.x, this.bounds.dimens.y);
         this.bounds.render();
     }
 }
@@ -195,22 +195,18 @@ class Mental extends Attack
         if(this.progress * 100 < this.pullThresh)
             return createVector(0, 0);
         this.pullThresh += 20;
-        console.log(this.pullThresh);
         let normalized = createVector(this.pos.x - entity.pos.x, this.pos.y - entity.pos.y);
         normalized.normalize();
         normalized.mult(this.source.knockback);
-        return(normalized);
+
+        return normalized;
     }
 
     render()
     {
         super.render();
         layer2.push();
-        layer2.fill(this.fillColor);
-        layer2.circle(this.pos.x, this.pos.y, 15);
-        layer2.fill("#1F1F29");
-        let point = this.bounds.getPointPos(0);
-        layer2.ellipse(point.x, point.y, 15, 10);
+        layer2.image(itemImgs[this.source.pngNum][1], this.pos.x-(max(32,this.radius/2)), this.pos.y-(max(32,this.radius/2)), this.radius, this.radius);
         layer2.pop();
     }
 }

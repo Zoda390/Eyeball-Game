@@ -101,7 +101,7 @@ class Door{
             this.bounds = new EntityCollider(x+(102/2), y-(150/2)-78, 102, 150);
         }
         if(direction == 1){ //down
-            this.bounds = new EntityCollider(x+(102/2)-7, y+(150/2)+60, 102, 150);
+            this.bounds = new EntityCollider(x+(102/2)-7, y+(150/2)+30, 102, 150);
         }
         if(direction == 2){ //left
             this.bounds = new EntityCollider(x-(150/2)-24, y-(102/2), 150, 102);

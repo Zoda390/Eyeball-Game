@@ -33,8 +33,12 @@ function imgPreload(){
     itemImgs.push([loadImage("Assets/Imgs/Items/Weapons/futureBow.png"), loadImage("Assets/Imgs/Items/Weapons/futureArrow.png")]);
 
     //Backgrounds
-    bgImgs.push([loadImage("Assets/Imgs/Rooms/1_2.png"), loadImage("Assets/Imgs/Rooms/1_2_fore.png")]);
+    bgImgs.push([loadImage("Assets/Imgs/Rooms/0_0.png"), loadImage("Assets/Imgs/Rooms/0_0_fore.png")]);
+    bgImgs.push([loadImage("Assets/Imgs/Rooms/0_1.png"), loadImage("Assets/Imgs/Rooms/0_1_fore.png")]);
+    bgImgs.push([loadImage("Assets/Imgs/Rooms/1_0.png"), loadImage("Assets/Imgs/Rooms/1_0_fore.png")]);
     bgImgs.push([loadImage("Assets/Imgs/Rooms/1_1.png"), loadImage("Assets/Imgs/Rooms/1_1_fore.png")]);
+    
+    bgImgs.push([loadImage("Assets/Imgs/Rooms/1_2.png"), loadImage("Assets/Imgs/Rooms/1_2_fore.png")]);
     bgImgs.push([loadImage("Assets/Imgs/Rooms/1_3.png"), loadImage("Assets/Imgs/Rooms/1_3_fore.png")]);
 
     //UIs

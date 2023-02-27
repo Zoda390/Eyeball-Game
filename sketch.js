@@ -26,8 +26,6 @@ function preload() {
     fxSlider = createSlider(0.0, 1.0, 0.5, 0.01);
 
     SoundFXSetup();
-
-    
 }
 
 function setup() {

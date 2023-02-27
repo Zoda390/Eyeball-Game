@@ -156,16 +156,17 @@ class Player extends LivingEntity {
 class Monster extends LivingEntity {
     constructor(x, y, hp, damage, eyes, color, pngNum) {
         super(x, y, hp, color, pngNum);
-        this.weapon = new Weapon(this, damage, 0, false);
         
         this.eyes = eyes;
         this.pathAccuracy = 5;
+        this.closeToPlayer = false;
         this.currentDestination = createVector(Math.random() * 300 + 300, Math.random() * 300 + 300);
 
         let temp = this.inv[0];
-        this.inv[0] = this.inv[2];
-        this.inv[2] = temp;
+        this.inv[0] = this.inv[0];
+        this.inv[0] = temp;
         this.weapon = this.inv[0];
+        console.log(this.weapon);
     }
 
     takeInput()
@@ -177,19 +178,42 @@ class Monster extends LivingEntity {
             this.currentDestination = createVector(Math.random() * 300 + 300, Math.random() * 300 + 300);
         }
 
-        
-
         diff.normalize();
         this.move(diff.x, diff.y);
+    }
+
+    updateCloseness()
+    {
+        let diff = createVector((player[0].pos.x - this.pos.x), (player[0].pos.y - this.pos.y));
+        let distance = this.pos.dist(player[0].pos);
+        diff.normalize();
+        this.closeToPlayer = distance <= 100;
+
+        if(abs(diff.x) > abs(diff.y))
+            if(diff.x > 0)
+                this.direction = 4;
+            else
+                this.direction = 3;
+        else
+            if(diff.y > 0)
+                this.direction = 2;
+            else
+                this.direction = 1;
     }
 
     update()
     {
         this.takeInput();
-            
-        this.attack(this.direction);
+        console.log(this.weapon);
 
-        //console.log(this.direction);
+        this.updateCloseness();
+
+        if(this.weapon.attackType == "Projectile" || this.weapon.attackType == "Mental" || (this.weapon.attackType == "Swing" && this.closeToPlayer))
+        {
+            this.attack(this.direction);
+        }
+
+        console.log(this.direction);
 
         if(this.hp <= 0)
             this.despawn = true;
